@@ -1,4 +1,4 @@
-;Wei's Stroop Task Model ver 3.3
+;Wei's Stroop Task Model ver 3.4
 
 (clear-all)
 
@@ -33,11 +33,24 @@
 (r1 ISA answer attend red)
 (r2 ISA answer attend blue)
 
-(start ISA chunk) (see-stimulus ISA chunk) (process ISA chunk) (retrieve-from-LTM ISA chunk)
-(motor-output ISA chunk) (finish ISA chunk) (r ISA chunk) (b ISA chunk) (color ISA chunk)
-(output ISA chunk) (pre-vocal-output ISA chunk) (vocal-output-blue ISA chunk) (stimulus ISA chunk)
-(stroop-stimulus ISA chunk) (blocked ISA chunk) (pause ISA chunk) (stroop-screen ISA chunk)
-(screen ISA chunk) (done ISA chunk)
+(start ISA chunk)
+(see-stimulus ISA chunk)
+(process ISA chunk)
+(retrieve-from-LTM ISA chunk)
+(motor-output ISA chunk)
+(finish ISA chunk)
+(r ISA chunk)
+(b ISA chunk)
+(color ISA chunk)
+(pre-vocal-output ISA chunk)
+(vocal-output-blue ISA chunk)
+(stimulus ISA chunk)
+(stroop-stimulus ISA chunk)
+(blocked ISA chunk)
+(pause ISA chunk)
+(stroop-screen ISA chunk)
+(screen ISA chunk)
+(done ISA chunk)
 
 )
 
@@ -67,20 +80,27 @@
     )
 
 (p prepare-wm
+   
   =visual>
     kind stroop-stimulus
     color =C
+    
   ?visual>
-    state free  
+    state free
+  
   ?imaginal>
     state free
     buffer empty
+
   ?vocal>
     preparation free
     processor free
     execution free
+
 ==>
+
   =visual>
+
   +imaginal>
     slot1 nil
     slot2 nil
@@ -321,10 +341,6 @@
     ISA speak
     cmd speak
     string "Red"
-
-  ;-visual>
-
-  ;-visual-location>
   
   -imaginal>
   
@@ -350,10 +366,6 @@
     cmd speak
     string "Blue"
 
-  ;-visual>
-
-  ;-visual-location>
-
   -imaginal>
 
   -retrieval>
@@ -361,6 +373,7 @@
 )
 
 
+(spp process-color-s1 :u 5)
 
 
 ;;Stroop-Device-Codes
