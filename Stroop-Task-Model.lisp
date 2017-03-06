@@ -1,8 +1,8 @@
-;Wei's Stroop Task Model ver 3.4
+;Wei's Stroop Task Model
 
 (clear-all)
 
-(define-model Stroop-Task-Model-Ver-3.4
+(define-model Stroop-Task-Model
 
 (sgp :esc t
      :act nil
@@ -30,8 +30,10 @@
 
 (add-dm
 
-(r1 ISA answer attend red)
-(r2 ISA answer attend blue)
+(w-red ISA answer attend red)
+(w-blue ISA answer attend blue)
+(c-red ISA answer attend red)
+(c-blue ISA answer attend blue)
 
 (start ISA chunk)
 (see-stimulus ISA chunk)
@@ -39,15 +41,11 @@
 (retrieve-from-LTM ISA chunk)
 (motor-output ISA chunk)
 (finish ISA chunk)
-(r ISA chunk)
-(b ISA chunk)
 (color ISA chunk)
-(pre-vocal-output ISA chunk)
-(vocal-output-blue ISA chunk)
 (stimulus ISA chunk)
 (stroop-stimulus ISA chunk)
-(blocked ISA chunk)
 (pause ISA chunk)
+(blocked ISA chunk)
 (stroop-screen ISA chunk)
 (screen ISA chunk)
 (done ISA chunk)
@@ -78,6 +76,8 @@
     screen-x 0
     screen-y 0
     )
+
+
 
 (p prepare-wm
    
@@ -155,100 +155,102 @@
 )
 
 
-(p dont-process-color-s1
+;(p dont-process-color-s1
 
-  =visual>
-    kind stroop-stimulus
-    word =W
+;  =visual>
+;    kind stroop-stimulus
+;    word =W
 
-  ?imaginal>
-    state free
+;  ?imaginal>
+;    state free
 
-  =imaginal>
-    slot1 nil
+;  =imaginal>
+;    slot1 nil
+;    slot2 nil
+    
+;==>
 
-==>
+;  =visual>
 
-  =visual>
+;  *imaginal>  
+;    slot1 =W
 
-  *imaginal>  
-    slot1 =W
-
-)
+;)
 
 
 
-(p dont-process-word-s1
+;(p dont-process-word-s1
 
-  =visual>
-    kind stroop-stimulus
-    color =C
+;  =visual>
+;    kind stroop-stimulus
+;    color =C
 
-  ?imaginal>
-    state free
+;  ?imaginal>
+;    state free
 
-  =imaginal>
-    slot1 nil
+;  =imaginal>
+;    slot1 nil
+;    slot2 nil
+    
+;==>
 
-==>
+;  =visual>
 
-  =visual>
+;  *imaginal> 
+;    slot1 =C
 
-  *imaginal> 
-    slot1 =C
-
-)
+;)
 
 
 ;; Don't Process (fill in slot2)
 
 
-(p process-color-s2
+;(p process-color-s2
 
-  =visual>
-    kind stroop-stimulus
-    color =C
-    word =W
+;  =visual>
+;    kind stroop-stimulus
+;    color =C
+;    word =W
 
-  ?imaginal>
-    state free
+;  ?imaginal>
+;    state free
 
-  =imaginal>
-  - slot1 nil
-    slot2 nil
+;  =imaginal>
+;  - slot1 nil
+;    slot2 nil
 
-==>
+;==>
 
-  =visual>
+;  =visual>
 
-  *imaginal>  
-    slot2 =C
+;  *imaginal>  
+;    slot2 =C
 
-)
+;)
 
 
-(p process-word-s2
+;(p process-word-s2
 
-  =visual>
-    kind stroop-stimulus
-    color =C
-    word =W
+;  =visual>
+;    kind stroop-stimulus
+;    color =C
+;    word =W
 
-  ?imaginal>
-    state free
+;  ?imaginal>
+;    state free
 
-  =imaginal>
-  - slot1 nil
-    slot2 nil
+;  =imaginal>
+;  - slot1 nil
+;    slot2 nil
 
-==>
+;==>
 
-  =visual>
+;  =visual>
 
-  *imaginal>  
-    slot2 =W
+;  *imaginal>  
+;    slot2 =W
 
-)
+;)
 
 
 
@@ -263,6 +265,7 @@
     state free
 
   =imaginal>
+  - slot1 nil
     slot2 nil
 
 ==>
@@ -288,6 +291,7 @@
     state free
 
   =imaginal>
+  - slot1 nil
     slot2 nil
 
 ==>
@@ -370,17 +374,24 @@
 
   -retrieval>
 
-)
+  )
 
+;;Parameters for productions and chunks
 
 (spp process-word-s1 :u 15)
 (spp process-color-s1 :u 5)
-(spp dont-process-color-s1 :u 15)
-(spp dont-process-word-s1 :u 5)
-(spp process-word-s2 :u 15)
-(spp )
-(spp)
-(spp)
+;(spp dont-process-color-s1 :u 15)
+;(spp dont-process-word-s1 :u 5)
+;(spp process-word-s2 :u 15)
+;(spp process-color-s2 :u 5)
+(spp dont-process-color-s2 :u 15)
+(spp dont-process-word-s2 :u 5)
+
+(set-base-levels (w-red 2.0)
+		 (w-blue 2.0)
+		 (c-red 0.5)
+		 (c-blue 0.5))
+
 
 ;;Stroop-Device-Codes
 
