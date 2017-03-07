@@ -1,8 +1,8 @@
-;Wei's Stroop Task Model ver 4.0
+;Wei's Stroop Task Model Test
 
 (clear-all)
 
-(define-model Stroop-Task-Model-Ver-4.0
+(define-model Stroop-Task-Model-Test
 
 (sgp :esc t
      :act nil
@@ -437,14 +437,14 @@
 
 (goal-focus g2)
 
-(spp process-word-s1 :u 14.694)
-(spp process-color-s1 :u 4)
-(spp dont-process-color-s1 :u 14.694)
-(spp dont-process-word-s1 :u 4)
-(spp process-word-s2 :u 14.694)
-(spp process-color-s2 :u 4)
-(spp dont-process-color-s2 :u 14.694)
-(spp dont-process-word-s2 :u 4)
+(spp process-word-s1 :u 4)
+(spp process-color-s1 :u 14.694)
+(spp dont-process-color-s1 :u 4)
+(spp dont-process-word-s1 :u 14.694)
+(spp process-word-s2 :u 4)
+(spp process-color-s2 :u 14.694)
+(spp dont-process-color-s2 :u 4)
+(spp dont-process-word-s2 :u 14.694)
 
 
 ;;Stroop-Device-Codes
