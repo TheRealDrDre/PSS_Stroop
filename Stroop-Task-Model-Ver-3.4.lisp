@@ -1,10 +1,18 @@
-;Wei's Stroop Task Model ver 3.3
+;Wei's Stroop Task Model ver 3.4
 
 (clear-all)
 
 (define-model Stroop-Task-Model-Ver-3.4
 
-(sgp :esc t :act nil :imaginal-activation 4.0  :mas 2.0  :ul T :auto-attend t :er t :egs 0.2 :ans   0.5)
+(sgp :esc t
+     :act nil
+     :imaginal-activation 3.0
+     :mas 4.0
+     :ul T
+     :auto-attend t
+     :er t
+     :egs 0.2
+     :ans   0.5)
 
 ;;Stroop-Device-Codes
 
@@ -25,11 +33,24 @@
 (r1 ISA answer attend red)
 (r2 ISA answer attend blue)
 
-(start ISA chunk) (see-stimulus ISA chunk) (process ISA chunk) (retrieve-from-LTM ISA chunk)
-(motor-output ISA chunk) (finish ISA chunk) (r ISA chunk) (b ISA chunk) (color ISA chunk)
-(output ISA chunk) (pre-vocal-output ISA chunk) (vocal-output-blue ISA chunk) (stimulus ISA chunk)
-(stroop-stimulus ISA chunk) (blocked ISA chunk) (pause ISA chunk) (stroop-screen ISA chunk)
-(screen ISA chunk) (done ISA chunk)
+(start ISA chunk)
+(see-stimulus ISA chunk)
+(process ISA chunk)
+(retrieve-from-LTM ISA chunk)
+(motor-output ISA chunk)
+(finish ISA chunk)
+(r ISA chunk)
+(b ISA chunk)
+(color ISA chunk)
+(pre-vocal-output ISA chunk)
+(vocal-output-blue ISA chunk)
+(stimulus ISA chunk)
+(stroop-stimulus ISA chunk)
+(blocked ISA chunk)
+(pause ISA chunk)
+(stroop-screen ISA chunk)
+(screen ISA chunk)
+(done ISA chunk)
 
 )
 
@@ -56,11 +77,33 @@
     ISA stroop-stimulus-location
     screen-x 0
     screen-y 0
+    )
+
+(p prepare-wm
+   
+  =visual>
+    kind stroop-stimulus
+    color =C
+    
+  ?visual>
+    state free
+  
+  ?imaginal>
+    state free
+    buffer empty
+
+  ?vocal>
+    preparation free
+    processor free
+    execution free
+
+==>
+
+  =visual>
 
   +imaginal>
     slot1 nil
     slot2 nil
-
 )
 
 
@@ -298,10 +341,6 @@
     ISA speak
     cmd speak
     string "Red"
-
-  -visual>
-
-  -visual-location>
   
   -imaginal>
   
@@ -327,10 +366,6 @@
     cmd speak
     string "Blue"
 
-  -visual>
-
-  -visual-location>
-
   -imaginal>
 
   -retrieval>
@@ -338,7 +373,14 @@
 )
 
 
-
+(spp process-word-s1 :u 15)
+(spp process-color-s1 :u 5)
+(spp dont-process-color-s1 :u 15)
+(spp dont-process-word-s1 :u 5)
+(spp process-word-s2 :u 15)
+(spp process-color-s2 :u 5)
+(spp dont-process-color-s2 :u 15)
+(spp dont-process-word-s2 :u 5)
 
 ;;Stroop-Device-Codes
 

@@ -1,5 +1,5 @@
 ;;; ------------------------------------------------------------------
-;;; SIMON-DEVICE.LISP
+;;; STROOP-DEVICE.LISP
 ;;; ------------------------------------------------------------------
 ;;; A class that provide an ACT-R GUI interface for a modified
 ;;; version of the Simon Task.
@@ -85,7 +85,7 @@
 			    (list (list (first lst)))))))
 
 
-;;; A simon-trial of the form (shape circle location left)
+;;; A stroop-trial of the form (shape circle location left)
 
 (defparameter *default-stroop-rule* 'color)
 
@@ -95,7 +95,7 @@
 						   (color red word red)))
 
 (defparameter *default-stroop-incongruent-stimuli* '((color blue word red)
-						     (shape red word blue)))
+						     (color red word blue)))
 
 
 (defun stroop-stimulus? (lst)
@@ -273,7 +273,7 @@
 
 (defmethod device-speak-string ((task stroop-task) str)
   "Responds to the model's vocal answers"
-  (respond task (intern (string-capitalize (format nil "~a" key)))))
+  (respond task (intern (string-upcase (format nil "~a" str)))))
 
 
 (defmethod get-mouse-coordinates ((task stroop-task))

@@ -1,14 +1,14 @@
-;Wei's Stroop Task Model ver 3.3
+;Wei's Stroop Task Model ver 4.0
 
 (clear-all)
 
-(define-model Stroop-Task-Model-Ver-3.4
+(define-model Stroop-Task-Model-Ver-4.0
 
 (sgp :esc t
      :act nil
      :imaginal-activation 3.0
      :mas 4.0
-     :ul T
+     :ul nil ;;was T;;
      :auto-attend t
      :er t
      :egs 0.2
@@ -24,25 +24,43 @@
 
 ;;Define Chunks
 
+(chunk-type goal task)
+
 (chunk-type answer attend)
 
 (chunk-type imaginal slot1 slot2)
 
 (add-dm
 
+(g1 ISA goal task name-word)
+(g2 ISA goal task name-color)
+ 
 (r1 ISA answer attend red)
 (r2 ISA answer attend blue)
 
-(start ISA chunk) (see-stimulus ISA chunk) (process ISA chunk) (retrieve-from-LTM ISA chunk)
-(motor-output ISA chunk) (finish ISA chunk) (r ISA chunk) (b ISA chunk) (color ISA chunk)
-(output ISA chunk) (pre-vocal-output ISA chunk) (vocal-output-blue ISA chunk) (stimulus ISA chunk)
-(stroop-stimulus ISA chunk) (blocked ISA chunk) (pause ISA chunk) (stroop-screen ISA chunk)
-(screen ISA chunk) (done ISA chunk)
+(start ISA chunk)
+(see-stimulus ISA chunk)
+(process ISA chunk)
+(retrieve-from-LTM ISA chunk)
+(motor-output ISA chunk)
+(finish ISA chunk)
+(color ISA chunk)
+(pre-vocal-output ISA chunk)
+(vocal-output-blue ISA chunk)
+(stimulus ISA chunk)
+(stroop-stimulus ISA chunk)
+(blocked ISA chunk)
+(pause ISA chunk)
+(stroop-screen ISA chunk)
+(screen ISA chunk)
+(done ISA chunk)
+(name-word ISA chunk)
+(name-color ISA chunk)
 
 )
 
 
-;;Loop Back See Stimulus and See stimulus
+;;See stimulus
 
 
 (p see-stimulus
@@ -67,20 +85,27 @@
     )
 
 (p prepare-wm
+   
   =visual>
     kind stroop-stimulus
     color =C
+    
   ?visual>
-    state free  
+    state free
+  
   ?imaginal>
     state free
     buffer empty
+
   ?vocal>
     preparation free
     processor free
     execution free
+
 ==>
+
   =visual>
+
   +imaginal>
     slot1 nil
     slot2 nil
@@ -91,19 +116,27 @@
 
 (p process-color-s1
 
-  =visual>
-    kind stroop-stimulus
-    color =C
+   =goal>
+   ISA goal
+   task name-color
+   
+   =visual>
+   kind stroop-stimulus
+   color =C
 
-  ?imaginal>
-    state free
+   ?imaginal>
+   state free
 
-  =imaginal>
-    slot1 nil
-    slot2 nil
+   =imaginal>
+   slot1 nil
+   slot2 nil
 
 ==>
 
+  =goal>
+  ISA goal
+  task name-color
+  
   =visual>
 
   *imaginal>  
@@ -114,6 +147,10 @@
 
 (p process-word-s1
 
+  =goal>
+   ISA goal
+   task name-word
+   
   =visual>
     kind stroop-stimulus
     word =W
@@ -127,6 +164,9 @@
 
 ==>
 
+  =goal>
+   task name-word
+  
   =visual>
 
   *imaginal>  
@@ -137,6 +177,10 @@
 
 (p dont-process-color-s1
 
+  =goal>
+   ISA goal
+   task name-word
+   
   =visual>
     kind stroop-stimulus
     word =W
@@ -149,6 +193,9 @@
 
 ==>
 
+  =goal>
+   task name-word
+  
   =visual>
 
   *imaginal>  
@@ -160,6 +207,10 @@
 
 (p dont-process-word-s1
 
+  =goal>
+   ISA goal
+   task name-color
+   
   =visual>
     kind stroop-stimulus
     color =C
@@ -172,6 +223,9 @@
 
 ==>
 
+  =goal>
+   task name-color
+  
   =visual>
 
   *imaginal> 
@@ -185,6 +239,10 @@
 
 (p process-color-s2
 
+  =goal>
+   ISA goal
+   task name-color
+   
   =visual>
     kind stroop-stimulus
     color =C
@@ -199,6 +257,9 @@
 
 ==>
 
+  =goal>
+   task name-color
+  
   =visual>
 
   *imaginal>  
@@ -209,6 +270,10 @@
 
 (p process-word-s2
 
+  =goal>
+   ISA goal
+   task name-word
+   
   =visual>
     kind stroop-stimulus
     color =C
@@ -223,6 +288,9 @@
 
 ==>
 
+  =goal>
+   task name-word
+  
   =visual>
 
   *imaginal>  
@@ -234,6 +302,10 @@
 
 (p dont-process-color-s2
 
+  =goal>
+   ISA goal
+   task name-word
+   
   =visual>
     kind stroop-stimulus
     color =C
@@ -247,6 +319,9 @@
 
 ==>
 
+  =goal>
+   task name-word
+  
   =visual>
 
   *imaginal>  
@@ -259,6 +334,10 @@
 
 (p dont-process-word-s2
 
+  =goal>
+   ISA goal
+   task name-color
+   
   =visual>
     kind stroop-stimulus
     color =C
@@ -272,6 +351,9 @@
 
 ==>
 
+  =goal>
+   task name-color
+  
   =visual>
 
   *imaginal> 
@@ -321,10 +403,6 @@
     ISA speak
     cmd speak
     string "Red"
-
-  ;-visual>
-
-  ;-visual-location>
   
   -imaginal>
   
@@ -350,10 +428,6 @@
     cmd speak
     string "Blue"
 
-  ;-visual>
-
-  ;-visual-location>
-
   -imaginal>
 
   -retrieval>
@@ -361,6 +435,14 @@
 )
 
 
+(spp process-word-s1 :u 15)
+(spp process-color-s1 :u 5)
+(spp dont-process-color-s1 :u 15)
+(spp dont-process-word-s1 :u 5)
+(spp process-word-s2 :u 15)
+(spp process-color-s2 :u 5)
+(spp dont-process-color-s2 :u 15)
+(spp dont-process-word-s2 :u 5)
 
 
 ;;Stroop-Device-Codes
