@@ -373,8 +373,14 @@
 )
 
 
+(spp process-word-s1 :u 15)
 (spp process-color-s1 :u 5)
-
+(spp dont-process-color-s1 :u 15)
+(spp dont-process-word-s1 :u 5)
+(spp process-word-s2 :u 15)
+(spp process-color-s2 :u 5)
+(spp dont-process-color-s2 :u 15)
+(spp dont-process-word-s2 :u 5)
 
 ;;Stroop-Device-Codes
 

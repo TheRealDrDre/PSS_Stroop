@@ -110,8 +110,16 @@
 (defun stimulus-congruent? (stimulus)
   (let* ((chunk (divide-into-pairs stimulus))
 	 (col (second (assoc 'color chunk)))
-	 (wrd (second (assoc 'word chunk))))
-    (when (equalp col wrd)
+	 (wrd (second (assoc 'word chunk)))
+	 (colstr (format nil "~A" col))
+	 (wrdstr (format nil "~A" wrd))
+	 (colname (subseq colstr (1+ (if (search "-" colstr)
+					 (search "-" colstr)
+					 -1))))
+	 (wrdname (subseq wrdstr (1+ (if (search "-" wrdstr)
+					 (search "-" wrdstr)
+					 -1)))))
+    (when (string= colname wrdname)
       t)))
 
 
@@ -190,10 +198,11 @@
      (trial-onset-time trial)))
 
 (defun trial-accuracy (trial)
-  (if (equal (trial-correct-response trial)
-	     (trial-actual-response trial))
-      1
-      0)) 
+  (let ((act-string (format nil "~A" (trial-actual-response trial)))
+	(cor-string (format nil "~A" (trial-correct-response trial))))
+    (if (search act-string cor-string)
+	1
+	0))) 
 
 (defclass stroop-task ()
   ((phase :accessor task-phase

@@ -1,14 +1,14 @@
-;Wei's Stroop Task Model
+;Wei's Stroop Task Model ver 4.0
 
 (clear-all)
 
-(define-model Stroop-Task-Model
+(define-model Stroop-Task-Model-Ver-4.0
 
 (sgp :esc t
      :act nil
      :imaginal-activation 3.0
      :mas 4.0
-     :ul T
+     :ul nil ;;was T;;
      :auto-attend t
      :er t
      :egs 0.2
@@ -24,16 +24,19 @@
 
 ;;Define Chunks
 
+(chunk-type goal task)
+
 (chunk-type answer attend)
 
 (chunk-type imaginal slot1 slot2)
 
 (add-dm
 
-(w-red ISA answer attend red)
-(w-blue ISA answer attend blue)
-(c-red ISA answer attend red)
-(c-blue ISA answer attend blue)
+(g1 ISA goal task name-word)
+(g2 ISA goal task name-color)
+ 
+(r1 ISA answer attend red)
+(r2 ISA answer attend blue)
 
 (start ISA chunk)
 (see-stimulus ISA chunk)
@@ -42,18 +45,22 @@
 (motor-output ISA chunk)
 (finish ISA chunk)
 (color ISA chunk)
+(pre-vocal-output ISA chunk)
+(vocal-output-blue ISA chunk)
 (stimulus ISA chunk)
 (stroop-stimulus ISA chunk)
-(pause ISA chunk)
 (blocked ISA chunk)
+(pause ISA chunk)
 (stroop-screen ISA chunk)
 (screen ISA chunk)
 (done ISA chunk)
+(name-word ISA chunk)
+(name-color ISA chunk)
 
 )
 
 
-;;Loop Back See Stimulus and See stimulus
+;;See stimulus
 
 
 (p see-stimulus
@@ -76,8 +83,6 @@
     screen-x 0
     screen-y 0
     )
-
-
 
 (p prepare-wm
    
@@ -111,19 +116,27 @@
 
 (p process-color-s1
 
-  =visual>
-    kind stroop-stimulus
-    color =C
+   =goal>
+   ISA goal
+   task name-color
+   
+   =visual>
+   kind stroop-stimulus
+   color =C
 
-  ?imaginal>
-    state free
+   ?imaginal>
+   state free
 
-  =imaginal>
-    slot1 nil
-    slot2 nil
+   =imaginal>
+   slot1 nil
+   slot2 nil
 
 ==>
 
+  =goal>
+  ISA goal
+  task name-color
+  
   =visual>
 
   *imaginal>  
@@ -134,6 +147,10 @@
 
 (p process-word-s1
 
+  =goal>
+   ISA goal
+   task name-word
+   
   =visual>
     kind stroop-stimulus
     word =W
@@ -147,6 +164,9 @@
 
 ==>
 
+  =goal>
+   task name-word
+  
   =visual>
 
   *imaginal>  
@@ -155,107 +175,74 @@
 )
 
 
-;(p dont-process-color-s1
+(p dont-process-color-s1
 
-;  =visual>
-;    kind stroop-stimulus
-;    word =W
+  =goal>
+   ISA goal
+   task name-word
+   
+  =visual>
+    kind stroop-stimulus
+    word =W
 
-;  ?imaginal>
-;    state free
+  ?imaginal>
+    state free
 
-;  =imaginal>
-;    slot1 nil
-;    slot2 nil
-    
-;==>
+  =imaginal>
+    slot1 nil
 
-;  =visual>
+==>
 
-;  *imaginal>  
-;    slot1 =W
+  =goal>
+   task name-word
+  
+  =visual>
 
-;)
+  *imaginal>  
+    slot1 =W
+
+)
 
 
 
-;(p dont-process-word-s1
+(p dont-process-word-s1
 
-;  =visual>
-;    kind stroop-stimulus
-;    color =C
+  =goal>
+   ISA goal
+   task name-color
+   
+  =visual>
+    kind stroop-stimulus
+    color =C
 
-;  ?imaginal>
-;    state free
+  ?imaginal>
+    state free
 
-;  =imaginal>
-;    slot1 nil
-;    slot2 nil
-    
-;==>
+  =imaginal>
+    slot1 nil
 
-;  =visual>
+==>
 
-;  *imaginal> 
-;    slot1 =C
+  =goal>
+   task name-color
+  
+  =visual>
 
-;)
+  *imaginal> 
+    slot1 =C
+
+)
 
 
 ;; Don't Process (fill in slot2)
 
 
-;(p process-color-s2
+(p process-color-s2
 
-;  =visual>
-;    kind stroop-stimulus
-;    color =C
-;    word =W
-
-;  ?imaginal>
-;    state free
-
-;  =imaginal>
-;  - slot1 nil
-;    slot2 nil
-
-;==>
-
-;  =visual>
-
-;  *imaginal>  
-;    slot2 =C
-
-;)
-
-
-;(p process-word-s2
-
-;  =visual>
-;    kind stroop-stimulus
-;    color =C
-;    word =W
-
-;  ?imaginal>
-;    state free
-
-;  =imaginal>
-;  - slot1 nil
-;    slot2 nil
-
-;==>
-
-;  =visual>
-
-;  *imaginal>  
-;    slot2 =W
-
-;)
-
-
-
-(p dont-process-color-s2
-
+  =goal>
+   ISA goal
+   task name-color
+   
   =visual>
     kind stroop-stimulus
     color =C
@@ -270,6 +257,71 @@
 
 ==>
 
+  =goal>
+   task name-color
+  
+  =visual>
+
+  *imaginal>  
+    slot2 =C
+
+)
+
+
+(p process-word-s2
+
+  =goal>
+   ISA goal
+   task name-word
+   
+  =visual>
+    kind stroop-stimulus
+    color =C
+    word =W
+
+  ?imaginal>
+    state free
+
+  =imaginal>
+  - slot1 nil
+    slot2 nil
+
+==>
+
+  =goal>
+   task name-word
+  
+  =visual>
+
+  *imaginal>  
+    slot2 =W
+
+)
+
+
+
+(p dont-process-color-s2
+
+  =goal>
+   ISA goal
+   task name-word
+   
+  =visual>
+    kind stroop-stimulus
+    color =C
+    word =W
+
+  ?imaginal>
+    state free
+
+  =imaginal>
+    slot2 nil
+
+==>
+
+  =goal>
+   task name-word
+  
   =visual>
 
   *imaginal>  
@@ -282,6 +334,10 @@
 
 (p dont-process-word-s2
 
+  =goal>
+   ISA goal
+   task name-color
+   
   =visual>
     kind stroop-stimulus
     color =C
@@ -291,11 +347,13 @@
     state free
 
   =imaginal>
-  - slot1 nil
     slot2 nil
 
 ==>
 
+  =goal>
+   task name-color
+  
   =visual>
 
   *imaginal> 
@@ -374,23 +432,17 @@
 
   -retrieval>
 
-  )
+)
 
-;;Parameters for productions and chunks
 
 (spp process-word-s1 :u 15)
 (spp process-color-s1 :u 5)
-;(spp dont-process-color-s1 :u 15)
-;(spp dont-process-word-s1 :u 5)
-;(spp process-word-s2 :u 15)
-;(spp process-color-s2 :u 5)
+(spp dont-process-color-s1 :u 15)
+(spp dont-process-word-s1 :u 5)
+(spp process-word-s2 :u 15)
+(spp process-color-s2 :u 5)
 (spp dont-process-color-s2 :u 15)
 (spp dont-process-word-s2 :u 5)
-
-(set-base-levels (w-red 2.0)
-		 (w-blue 2.0)
-		 (c-red 0.5)
-		 (c-blue 0.5))
 
 
 ;;Stroop-Device-Codes
