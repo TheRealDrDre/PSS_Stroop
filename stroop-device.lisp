@@ -151,8 +151,10 @@
 (defun set-trial-response-time (trial tme)
   (setf (nth 2 trial) tme))
 
-(defun trial-correct-response (trial)
-  (nth 3 trial))
+(defun trial-correct-response (trial &optional (task 'color))
+  (let* ((stim (trial-stimulus trial))
+	 (pairs (divide-into-pairs stim)))
+    (cadr (assoc task pairs)))) 
 
 (defun set-trial-correct-response (trial response)
   (setf (nth 3 trial) response))
@@ -189,11 +191,12 @@
   (- (trial-response-time trial)
      (trial-onset-time trial)))
 
-(defun trial-accuracy (trial)
-  (if (equal (trial-correct-response trial)
-	     (trial-actual-response trial))
-      1
-      0)) 
+(defun trial-accuracy (trial &optional (task 'color))
+  (let ((act-string (format nil "~A" (trial-actual-response trial)))
+	(cor-string (format nil "~A" (trial-correct-response trial task))))
+    (if (search act-string cor-string)
+	1
+	0))) 
 
 (defclass stroop-task ()
   ((phase :accessor task-phase
@@ -352,13 +355,13 @@
 ;;; STATS
 ;;; ------------------------------------------------------------------
 
-(defun analyze-log (log)
+(defun analyze-log (log &optional (task 'color))
   "Analyzes the log of a single run"
   (let* ((incong (remove-if #'trial-congruent? log))
 	 (cong (remove-if-not #'trial-congruent? log))
-	 (correct-incong (remove-if-not #'(lambda (x) (= (trial-accuracy x) 1))
+	 (correct-incong (remove-if-not #'(lambda (x) (= (trial-accuracy x task) 1))
 					incong))
-	 (correct-cong (remove-if-not #'(lambda (x) (= (trial-accuracy x) 1))
+	 (correct-cong (remove-if-not #'(lambda (x) (= (trial-accuracy x task) 1))
 					cong)))
     
     (if (or (null correct-incong)
@@ -367,8 +370,8 @@
 	;;'((:congruent :na) (:incongruent :na))
 	'(:na :na :na :na)
 	;; Otherwise, compute accuracies and RTs (on correct trials)
-	(let* ((cong-acc (apply #'mean (mapcar #'trial-accuracy cong)))
-	       (incong-acc (apply #'mean (mapcar #'trial-accuracy incong)))
+	(let* ((cong-acc (apply #'mean (mapcar #'(lambda (x) (trial-accuracy x task)) cong)))
+	       (incong-acc (apply #'mean (mapcar #'(lambda (x) (trial-accuracy x task)) incong)))
 	       (cong-rt (apply #'mean (mapcar #'trial-rt correct-cong)))
 	       (incong-rt (apply #'mean (mapcar #'trial-rt correct-incong))))
 	  (list cong-acc cong-rt incong-acc incong-rt)))))
