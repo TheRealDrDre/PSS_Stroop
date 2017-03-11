@@ -25,16 +25,16 @@
 
 ;;Define Chunks
 
-(chunk-type goal task)
+(chunk-type goal task focus)
 
 (chunk-type answer attend)
 
-(chunk-type imaginal slot1 slot2)
+(chunk-type imaginal slot1 slot2 slot3)
 
 (add-dm
 
-(g1 ISA goal task name-word)
-(g2 ISA goal task name-color)
+(g1 ISA goal task name-word focus word)
+(g2 ISA goal task name-color focus color)
  
 (r1 ISA answer attend red)
 (r2 ISA answer attend blue)
@@ -57,6 +57,10 @@
 (done ISA chunk)
 (name-word ISA chunk)
 (name-color ISA chunk)
+(fill-slot-2 ISA chunk)
+(retrieve ISA chunk)
+(check ISA chunk)
+
 
 )
 
@@ -136,7 +140,8 @@
 
   =goal>
   ISA goal
-  task name-color
+  task fill-slot-2
+  focus color
   
   =visual>
 
@@ -166,8 +171,9 @@
 ==>
 
   =goal>
-   task name-word
-  
+   task fill-slot-2
+   focus word
+   
   =visual>
 
   *imaginal>  
@@ -176,136 +182,136 @@
 )
 
 
-(p dont-process-color-s1
+;(p dont-process-color-s1
 
-  =goal>
-   ISA goal
-   task name-word
+;  =goal>
+;   ISA goal
+;   task name-word
    
-  =visual>
-    kind stroop-stimulus
-    word =W
+;  =visual>
+;    kind stroop-stimulus
+;    word =W
 
-  ?imaginal>
-    state free
+;  ?imaginal>
+;    state free
 
-  =imaginal>
-    slot1 nil
+;  =imaginal>
+;    slot1 nil
 
-==>
+;==>
 
-  =goal>
-   task name-word
+;  =goal>
+;   task fill-slot-2
   
-  =visual>
+;  =visual>
 
-  *imaginal>  
-    slot1 =W
+;  *imaginal>  
+;    slot1 =W
 
-)
+;)
 
 
 
-(p dont-process-word-s1
+;(p dont-process-word-s1
 
-  =goal>
-   ISA goal
-   task name-color
+;  =goal>
+;   ISA goal
+;   task name-color
    
-  =visual>
-    kind stroop-stimulus
-    color =C
+;  =visual>
+;    kind stroop-stimulus
+;    color =C
 
-  ?imaginal>
-    state free
+;  ?imaginal>
+;    state free
 
-  =imaginal>
-    slot1 nil
+;  =imaginal>
+;    slot1 nil
 
-==>
+;==>
 
-  =goal>
-   task name-color
+;  =goal>
+;   task fill-slot-2
   
-  =visual>
+;  =visual>
 
-  *imaginal> 
-    slot1 =C
+; *imaginal> 
+;    slot1 =C
 
-)
+;)
 
 
 ;; Don't Process (fill in slot2)
 
 
-(p process-color-s2
+;(p process-color-s2
 
-  =goal>
-   ISA goal
-   task name-color
+;  =goal>
+;   ISA goal
+;   task name-color
    
-  =visual>
-    kind stroop-stimulus
-    color =C
-    word =W
+;  =visual>
+ ;   kind stroop-stimulus
+  ;  color =C
+   ; word =W
 
-  ?imaginal>
-    state free
+;  ?imaginal>
+ ;   state free
 
-  =imaginal>
-  - slot1 nil
-    slot2 nil
+ ; =imaginal>
+ ; - slot1 nil
+ ;   slot2 nil
 
-==>
+;==>
 
-  =goal>
-   task name-color
+;  =goal>
+ ;  task name-color
   
-  =visual>
+;  =visual>
 
-  *imaginal>  
-    slot2 =C
+;  *imaginal>  
+;    slot2 =C
 
-)
+;)
 
 
-(p process-word-s2
+;(p process-word-s2
 
-  =goal>
-   ISA goal
-   task name-word
+ ; =goal>
+  ; ISA goal
+  ; task name-word
    
-  =visual>
-    kind stroop-stimulus
-    color =C
-    word =W
+;  =visual>
+;    kind stroop-stimulus
+;    color =C
+;    word =W
 
-  ?imaginal>
-    state free
+;  ?imaginal>
+;    state free
 
-  =imaginal>
-  - slot1 nil
-    slot2 nil
+;  =imaginal>
+;  - slot1 nil
+;    slot2 nil
 
-==>
+;==>
 
-  =goal>
-   task name-word
+ ; =goal>
+ ;  task name-word
   
-  =visual>
+;  =visual>
 
-  *imaginal>  
-    slot2 =W
+ ; *imaginal>  
+ ;   slot2 =W
 
-)
+;)
 
 
 
 (p dont-process-color-s2
 
   =goal>
-   ISA goal
-   task name-word
+  ISA goal
+   task fill-slot-2
    
   =visual>
     kind stroop-stimulus
@@ -321,7 +327,7 @@
 ==>
 
   =goal>
-   task name-word
+  task retrieve
   
   =visual>
 
@@ -337,7 +343,7 @@
 
   =goal>
    ISA goal
-   task name-color
+   task fill-slot-2
    
   =visual>
     kind stroop-stimulus
@@ -353,7 +359,7 @@
 ==>
 
   =goal>
-   task name-color
+   task retrieve
   
   =visual>
 
@@ -367,6 +373,9 @@
 
 (p retrieve-from-LTM
 
+   =goal>
+   task retrieve
+   
   =imaginal>
   - slot1 nil
   - slot2 nil
@@ -377,6 +386,9 @@
 
 ==>
 
+   =goal>
+      task check 
+
   =imaginal>
 
   +retrieval>
@@ -385,12 +397,85 @@
 
 )
 
+;; check task
+
+(p re-select-color
+   =goal>
+      task check
+      focus color
+   =retrieval>
+      ISA answer
+      attend =ans
+   =imaginal>
+      slot1 =C
+   =visual>
+      kind stroop-stimulus
+      color =C
+    - color =ans 
+==>
+   =goal>
+      task fill-slot-2
+   -retrieval>
+   *imaginal>
+      slot2 nil
+   =visual>
+ )
+
+
+(p to-output-color
+   =goal>
+      task check
+      focus color
+   =imaginal>
+      slot1 =ans
+   =retrieval>
+      ISA answer
+      attend =ans
+   =visual>
+      kind stroop-stimulus
+      color =ans
+==>
+   =goal>
+      task name-color
+   =retrieval>   
+   =visual>
+   *imaginal>
+      slot3 =ans
+)
+
+(p to-output-word
+   =goal>
+      task check
+      focus word
+   =imaginal>
+      slot1 =ans
+      slot2 =ans 
+   =retrieval>
+      ISA answer
+      attend =ans
+   =visual>
+      kind stroop-stimulus
+      word =ans
+==>
+   =goal>
+      task name-word
+   =imaginal>         
+   =retrieval>   
+   =visual>
+   *imaginal>
+      slot3 =ans
+)
 
 ;; vocal-output
 
 
 (p vocal-output-red
-
+   
+     =imaginal>
+  - slot1 nil
+  - slot2 nil
+  - slot3 nil
+   
   =retrieval>
     ISA answer
     attend red
@@ -415,6 +500,11 @@
 
 (p vocal-output-blue
 
+     =imaginal>
+  - slot1 nil
+  - slot2 nil
+  - slot3 nil
+   
   =retrieval>
     ISA answer
     attend blue
@@ -437,14 +527,14 @@
 
 (goal-focus g2)
 
-(spp process-word-s1 :u 14.694)
-(spp process-color-s1 :u 4)
-(spp dont-process-color-s1 :u 14.694)
-(spp dont-process-word-s1 :u 4)
-(spp process-word-s2 :u 14.694)
-(spp process-color-s2 :u 4)
-(spp dont-process-color-s2 :u 14.694)
-(spp dont-process-word-s2 :u 4)
+(spp process-word-s1 :u 25)
+(spp process-color-s1 :u 5)
+;(spp dont-process-color-s1 :u 50)
+;(spp dont-process-word-s1 :u 5)
+;(spp process-word-s2 :u 50)
+;(spp process-color-s2 :u 5)
+(spp dont-process-color-s2 :u 25)
+(spp dont-process-word-s2 :u 5)
 
 
 ;;Stroop-Device-Codes
@@ -454,6 +544,12 @@
 (init (current-device))
 
 (proc-display)
+
+
+;;Maybe dont process fill slot 2 because it is not conciously monitered?
+;;Process fill slot 1 becasue it could be altered by attention
+;; word 14.694 color 4
+;;try utility T fix word can't run complete
 
 
 )
