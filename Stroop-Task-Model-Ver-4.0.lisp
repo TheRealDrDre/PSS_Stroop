@@ -1,8 +1,8 @@
-;Wei's Stroop Task Model ver 4.1
+;Wei's Stroop Task Model ver 4.0
 
 (clear-all)
 
-(define-model Stroop-Task-Model-Ver-4.1
+(define-model Stroop-Task-Model-Ver-4.0
 
 (sgp :esc t
      :act nil
@@ -29,7 +29,7 @@
 
 (chunk-type answer attend)
 
-(chunk-type imaginal slot1 slot2 status)
+(chunk-type imaginal slot1 slot2 slot3)
 
 (add-dm
 
@@ -59,8 +59,7 @@
 (fill-slot-2 ISA chunk)
 (retrieve ISA chunk)
 (check ISA chunk)
-(output ISA chunk)
-(check-or-retrieve ISA chunk)
+
 
 )
 
@@ -141,6 +140,7 @@
   =goal>
   ISA goal
   task fill-slot-2
+  focus color
   
   =visual>
 
@@ -169,9 +169,9 @@
 
 ==>
 
-   =goal>
-      ISA goal
-      task fill-slot-2
+  =goal>
+   task fill-slot-2
+   focus word
    
   =visual>
 
@@ -180,7 +180,131 @@
 
 )
 
-;;Fill in Slot 2
+
+;(p dont-process-color-s1
+
+;  =goal>
+;   ISA goal
+;   task name-word
+   
+;  =visual>
+;    kind stroop-stimulus
+;    word =W
+
+;  ?imaginal>
+;    state free
+
+;  =imaginal>
+;    slot1 nil
+
+;==>
+
+;  =goal>
+;   task fill-slot-2
+  
+;  =visual>
+
+;  *imaginal>  
+;    slot1 =W
+
+;)
+
+
+
+;(p dont-process-word-s1
+
+;  =goal>
+;   ISA goal
+;   task name-color
+   
+;  =visual>
+;    kind stroop-stimulus
+;    color =C
+
+;  ?imaginal>
+;    state free
+
+;  =imaginal>
+;    slot1 nil
+
+;==>
+
+;  =goal>
+;   task fill-slot-2
+  
+;  =visual>
+
+; *imaginal> 
+;    slot1 =C
+
+;)
+
+
+;; Don't Process (fill in slot2)
+
+
+;(p process-color-s2
+
+;  =goal>
+;   ISA goal
+;   task name-color
+   
+;  =visual>
+ ;   kind stroop-stimulus
+  ;  color =C
+   ; word =W
+
+;  ?imaginal>
+ ;   state free
+
+ ; =imaginal>
+ ; - slot1 nil
+ ;   slot2 nil
+
+;==>
+
+;  =goal>
+ ;  task name-color
+  
+;  =visual>
+
+;  *imaginal>  
+;    slot2 =C
+
+;)
+
+
+;(p process-word-s2
+
+ ; =goal>
+  ; ISA goal
+  ; task name-word
+   
+;  =visual>
+;    kind stroop-stimulus
+;    color =C
+;    word =W
+
+;  ?imaginal>
+;    state free
+
+;  =imaginal>
+;  - slot1 nil
+;    slot2 nil
+
+;==>
+
+ ; =goal>
+ ;  task name-word
+  
+;  =visual>
+
+ ; *imaginal>  
+ ;   slot2 =W
+
+;)
+
+
 
 (p dont-process-color-s2
 
@@ -202,7 +326,7 @@
 ==>
 
   =goal>
-  task check-or-retrieve
+  task retrieve
   
   =visual>
 
@@ -211,6 +335,7 @@
 
 
 )
+
 
 
 (p dont-process-word-s2
@@ -233,7 +358,7 @@
 ==>
 
   =goal>
-   task check-or-retrieve
+   task retrieve
   
   =visual>
 
@@ -243,53 +368,12 @@
 )
 
 
-;; Reach Threshold Check Task
-
-(p check-slot-2-color
-   =goal>
-      task check-or-retrieve
-      focus color
-   =imaginal>   
-   - slot2 =C
-   - slot2 nil
-   =visual>
-      kind stroop-stimulus
-      color =C 
-==>
-   =goal>
-      task fill-slot-2
-   *imaginal>
-      slot2 nil
-   =visual>
-   )
-
-(p check-slot-2-word
-   =goal>
-      task check-or-retrieve
-      focus word
-   =imaginal>
-      - slot2 =W
-      - slot2 nil
-   =visual>
-      kind stroop-stimulus
-      word =W
-      
-==>
-   =goal>
-      task fill-slot-2
-   *imaginal>
-      slot2 nil
-   =visual>
-
-   )
-
-
 ;;Reach threshold and retrieve from LTM (slot1 is Response slot2 is Interference)
 
 (p retrieve-from-LTM
 
    =goal>
-   task check-or-retrieve
+   task retrieve
    
   =imaginal>
   - slot1 nil
@@ -304,8 +388,8 @@
    =goal>
       task check 
 
-   =imaginal>
-  
+  =imaginal>
+
   +retrieval>
     ISA answer
   - attend nil
@@ -313,7 +397,8 @@
   )
 
 
-;;Check Task
+
+;; check task
 
 (p re-select-color
    =goal>
@@ -323,9 +408,10 @@
       ISA answer
       attend =ans
    =imaginal>
-      slot2 =Var
+      slot1 =C
    =visual>
       kind stroop-stimulus
+      color =C
     - color =ans 
 ==>
    =goal>
@@ -344,9 +430,10 @@
       ISA answer
       attend =ans
    =imaginal>
-      slot2 =Var
+      slot1 =W
    =visual>
       kind stroop-stimulus
+      word =W
     - word =ans
       
 ==>
@@ -364,7 +451,7 @@
       task check
       focus color
    =imaginal>
-      slot2 =ans
+      slot1 =ans
    =retrieval>
       ISA answer
       attend =ans
@@ -377,7 +464,7 @@
    =retrieval>   
    =visual>
    *imaginal>
-      status output
+      slot3 =ans
 )
 
 (p to-output-word
@@ -385,7 +472,7 @@
       task check
       focus word
    =imaginal>
-      slot2 =ans
+      slot1 =ans
    =retrieval>
       ISA answer
       attend =ans
@@ -398,18 +485,18 @@
    =retrieval>   
    =visual>
    *imaginal>
-      status output
+      slot3 =ans
 )
 
-
 ;; vocal-output
+
 
 (p vocal-output-red
    
      =imaginal>
   - slot1 nil
   - slot2 nil
-    status output
+  - slot3 nil
    
   =retrieval>
     ISA answer
@@ -429,6 +516,7 @@
   
   -retrieval>
 
+
 )
 
 
@@ -437,7 +525,7 @@
      =imaginal>
   - slot1 nil
   - slot2 nil
-    status output
+  - slot3 nil
    
   =retrieval>
     ISA answer
@@ -461,13 +549,13 @@
 
 (goal-focus g2)
 
-(spp process-word-s1 :u 20)
+(spp process-word-s1 :u 25)
 (spp process-color-s1 :u 5)
 ;(spp dont-process-color-s1 :u 50)
 ;(spp dont-process-word-s1 :u 5)
 ;(spp process-word-s2 :u 50)
 ;(spp process-color-s2 :u 5)
-(spp dont-process-color-s2 :u 20)
+(spp dont-process-color-s2 :u 25)
 (spp dont-process-word-s2 :u 5)
 
 
