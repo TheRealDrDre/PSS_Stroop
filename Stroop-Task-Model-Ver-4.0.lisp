@@ -11,7 +11,7 @@
      :ul T
      :auto-attend t
      :er t
-     :egs 0.2
+     :egs 2.0 ;0.2
      :ans 0.5
      )
 
@@ -140,7 +140,7 @@
   =goal>
   ISA goal
   task fill-slot-2
-  focus color
+;  focus color
   
   =visual>
 
@@ -171,7 +171,7 @@
 
   =goal>
    task fill-slot-2
-   focus word
+;   focus word
    
   =visual>
 
@@ -406,13 +406,15 @@
       focus color
    =retrieval>
       ISA answer
-      attend =ans
+    - attend =ans
    =imaginal>
-      slot1 =C
+    - slot1 nil
+;   slot1 =C
    =visual>
-      kind stroop-stimulus
-      color =C
-    - color =ans 
+       kind stroop-stimulus
+       color =ans
+;      color =C
+;    - color =ans 
 ==>
    =goal>
       task fill-slot-2
@@ -428,13 +430,15 @@
       focus word
    =retrieval>
       ISA answer
-      attend =ans
+    - attend =ans
    =imaginal>
-      slot1 =W
+;      slot1 =W
+     - slot1 nil 
    =visual>
       kind stroop-stimulus
-      word =W
-    - word =ans
+      word =ans
+;      word =W
+;    - word =ans
       
 ==>
    =goal>
@@ -450,8 +454,9 @@
    =goal>
       task check
       focus color
-   =imaginal>
-      slot1 =ans
+    =imaginal>
+      - slot1 nil
+;      slot1 =ans
    =retrieval>
       ISA answer
       attend =ans
@@ -471,8 +476,9 @@
    =goal>
       task check
       focus word
-   =imaginal>
-      slot1 =ans
+    =imaginal>
+      - slot1 nil
+;      slot1 =ans
    =retrieval>
       ISA answer
       attend =ans
