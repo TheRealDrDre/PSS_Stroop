@@ -383,10 +383,10 @@
 
 (goal-focus g2)
 
-(spp process-word-s1 :u 5)
-(spp process-color-s1 :u 25)
-(spp dont-process-color-s2 :u 5)
-(spp dont-process-word-s2 :u 25)
+(spp process-word-s1 :u 25)
+(spp process-color-s1 :u 5)
+(spp dont-process-color-s2 :u 25)
+(spp dont-process-word-s2 :u 5)
 
 
 ;;Stroop-Device-Codes
