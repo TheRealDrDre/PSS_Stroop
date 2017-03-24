@@ -229,9 +229,11 @@
       (when (act-r-loaded?)
 	(set-trial-response-time (current-trial task)
 				 (mp-time))
-	(if (= 1 (trial-accuracy (current-trial task)))
-	    (trigger-reward 1)
-	    (trigger-reward -1))
+	(let ((goal (chunk-slot-value-fct (car (buffer-chunk-fct '(goal)))
+					  'focus)))
+	  (if (= 1 (trial-accuracy (current-trial task) goal))
+	      (trigger-reward 1)
+	      (trigger-reward -1)))
 	(schedule-event-relative 0 #'next :params (list task))))))
       
       
