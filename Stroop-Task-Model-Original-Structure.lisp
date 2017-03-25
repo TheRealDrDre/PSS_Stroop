@@ -387,6 +387,8 @@
 (spp process-color-s1 :u 5)
 (spp dont-process-color-s2 :u 25)
 (spp dont-process-word-s2 :u 5)
+(spp re-select-color :reward -1)
+(spp re-select-word :reward -1)
 
 
 ;;Stroop-Device-Codes
@@ -400,6 +402,6 @@
 
 ;;Maybe dont process fill slot 2 because it is not conciously monitered?
 ;;Process fill slot 1 because it could be altered by attention
-
+;;word 75 color 161
 
 )
