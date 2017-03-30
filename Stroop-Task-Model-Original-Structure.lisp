@@ -63,6 +63,8 @@
 (yes ISA chunk)
 (no ISA chunk)
 
+;;clean up the ISA chunk stuff later
+
 )
 
 
@@ -402,6 +404,7 @@
 
 ;;Maybe dont process fill slot 2 because it is not conciously monitered?
 ;;Process fill slot 1 because it could be altered by attention
+;;Slot 3 is output (so that we don't confuse it with the actual filling of slots)
 ;;word 75 color 161
 
 )
