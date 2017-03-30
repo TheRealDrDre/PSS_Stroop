@@ -397,7 +397,6 @@
 
 (defun result-incongruent-rt (res)
   (nth 3 res))
-
 	  
 (defun average-results (results)
   "Averages values across a list of results"
@@ -417,3 +416,22 @@
       (setf *results* results))))
     
 (defparameter *results* nil)
+
+(defun stroop-reload ()
+  "Precise reload"
+  (reload)
+  (install-device (make-instance 'stroop-task))
+  (init (current-device))
+  (proc-display))
+
+(defun simulate (n &optional (params nil))
+  "Simulate N trials with specific PARAMS"
+  (let ((results nil))
+    (dotimes (j n results)
+      (reload)
+      (when params
+	(sgp-fct params))
+      (sgp :v nil)  ;; Ensures no verbose output
+      (no-output (run 1000))
+      (let ((partial (analyze-log (experiment-log (current-device)))))
+	(push partial results)))))
