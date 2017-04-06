@@ -6,9 +6,11 @@
 
 (sgp :esc t
      :act nil
+     :reward-hook bg-reward-hook
      :imaginal-activation 3.0
      :mas 4.0
      :ul T
+     :alpha 0.2
      :auto-attend t
      :er t
      :egs 0.2 
@@ -385,13 +387,14 @@
 
 (goal-focus g2)
 
-(spp process-word-s1 :u 25)
-(spp process-color-s1 :u 5)
-(spp dont-process-color-s2 :u 25)
-(spp dont-process-word-s2 :u 5)
+(spp process-word-s1 :u 2)
+(spp process-color-s1 :u 0)
+(spp dont-process-color-s2 :u 2)
+(spp dont-process-word-s2 :u 0)
 (spp re-select-color :reward -1)
 (spp re-select-word :reward -1)
-
+(spp to-output-word :reward 1)
+(spp to-output-color :reward 1)
 
 ;;Stroop-Device-Codes
 
