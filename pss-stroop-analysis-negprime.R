@@ -98,3 +98,17 @@ text(x=1:2, y=means+1, labels = paste(means, "ms"), adj = c(1/2,0))
 title("Negative Priming in Low-Avoid and High-Avoid participants")
 m <- t.test(NegPrimeEffect ~ Group, paired=F, final)
 text(x=1.5, y=100, labels = paste("p =", round(m$p.value, 3)))
+
+
+# Median split
+
+final$Group <- "High Avoid"
+final$Group[final$Avoid <= median(final$Avoid)] <- "Low Avoid"
+final$Group <- as.factor(final$Group)
+plot(final$Group, final$NegPrimeEffect, ylab="Negative Priming (ms)")
+grid()
+means <- round(tapply(final$NegPrimeEffect, final$Group, mean), 2)
+text(x=1:2, y=means+1, labels = paste(means, "ms"), adj = c(1/2,0))
+title("Negative Priming in Low-Avoid and High-Avoid participants")
+m <- t.test(NegPrimeEffect ~ Group, paired=F, final)
+text(x=1.5, y=100, labels = paste("p =", round(m$p.value, 3)))
